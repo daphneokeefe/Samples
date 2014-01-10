@@ -1,0 +1,165 @@
+<!doctype html>
+<html>
+	<head>
+		<title>FizzBuzz</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width" />
+		<style type="text/css">
+			body, input {font-family: Tahoma, sans-serif; font-size: 16px;}
+			div {padding:10px;}
+			fieldset {border-radius:15px;}
+			input {margin-left: 10px; }
+			input[type=button]{	
+				text-align:center;
+				text-decoration: none;
+				font-family: sans-serif;
+				color: #FFF;
+				background: #0CADA7;
+				padding: 5px 10px 5px 10px;
+				display: inline-block;
+				white-space: nowrap;
+				border-radius: 5px;
+				margin: 10px 0;
+			}
+			input[type=button]:hover {
+				background: #0A948F;
+				}				
+
+			input[type=text] {float:right; width:50px;}
+			input[type=text]:valid { color: green;}
+			input[type=text]:invalid { color: red;}
+			label {float:left;padding-top:3px;}
+			label.left {width:145px;}
+			label.right {width:55px;}
+			legend {color:#0CADA7;font-weight:bold;}
+			p {clear:both;}
+			.result {
+				background: linear-gradient(#ffffff, #dddddd);
+				border:solid 1px #dddddd;
+				border-radius: 15px;				
+				margin: 5px auto;
+				text-align: center;
+				width: 50px;
+			}
+			.fizz {  
+				background: linear-gradient(#ffffff, #8ee5ee);
+				border-color: #8ee5ee;
+				color: #53868b;				
+			}
+			.buzz {
+				background: linear-gradient(#ffffff, #7fff00);
+				border-color: #7fff00;
+				color: #458b00;
+			}
+			.fizzBuzz {
+				background: linear-gradient(#ffffff, #fff273);
+				border-color: #fff273; 
+				color: #a69700;
+			}
+		</style>
+	</head>
+	<body >
+		<div style="width:450px;">
+			<form>
+				<fieldset>
+					<legend>FizzBuzz</legend>
+					<div style="float:left;padding:10px;">
+						<div >
+							<label for="startValue" class="left" >Start counting at</label>
+							<input type="text" name="startValue" autofocus pattern="[0-9]*" placeholder="Enter a number" required tabindex="1" title="Enter a number" value="1">
+						</div>
+						<div style="clear:left;float:left;">	
+							<label for="endValue" class="left" >Stop counting after</label>
+							<input type="text" name="endValue" pattern="[0-9]*" placeholder="Enter a number" required 
+							tabindex="2" title="Enter a number" value="20" >	
+						</div>
+					</div>
+					<div style="float:left;padding:10px;">
+						<div >
+							<label for="fizzValue" class="right" >Fizz at </label>
+							<input type="text" name="fizzValue" pattern="[0-9]*" placeholder="Enter a number" required 
+							tabindex="3" title="Enter a number" value="3" >
+						</div>	
+						<div style="float:left;clear:left;">
+							<label for="buzzValue" class="right" >Buzz at</label>
+							<input type="text" name="buzzValue" pattern="[0-9]*" placeholder="Enter a number" required 
+							tabindex="4" title="Enter a number" value="5" >
+						</div>
+					</div>
+					<p style="text-align:center;" >
+						<input type="button" id="fizzButton" tabindex="5" value="Fizz" >
+					</p>
+					<p id="errorMessage" style="visibility:hidden;color:red;">Please enter numbers for all four inputs.</p>
+				</fieldset>
+			</form>				
+			<div id="showResult" style="clear:both;">
+			</div>
+		</div>
+		<script>
+			window.onload = function () {
+				document.getElementById("fizzButton").addEventListener('click', function() {
+					var buzz,			// the second divisor to test
+					    fizz,			// the first divisor to test
+					    showResult,		// the div to display the result of the calculation
+					    start,			// the beginning number
+					    stop;			// the last number					
+
+					buzz = document.getElementsByName('buzzValue').item(0).value;
+					fizz = document.getElementsByName('fizzValue').item(0).value;
+					start = document.getElementsByName('startValue').item(0).value;
+					stop = document.getElementsByName('endValue').item(0).value;					
+
+					showResult = document.getElementById('showResult');
+					showResult.textContent = '';
+
+					if (!validNumbers()) { 
+					  	return; 
+					}
+
+					for (var i = Number(start); i <= Number(stop); i++) { 
+						if (i % (fizz * buzz) == 0) {
+						    addItem('fizzBuzz', 'fizzBuzz');
+						} else if (i % fizz == 0) {
+						  	addItem('fizz','fizz');
+						} else if (i % buzz == 0) {
+							addItem('buzz', 'buzz');
+						} else {
+						    addItem(i, 'number');
+						}
+					}
+
+				}, false );
+
+				addItem = function (caption, typeName) {
+					var newItem; 	// a bubble-shaped div displaying the current counting caption
+
+					newItem = document.createElement('div');								
+					newItem.appendChild(document.createTextNode(caption));
+					newItem.classList.add(typeName);
+					newItem.classList.add('result');					
+	
+					showResult.appendChild(newItem);
+				};
+
+				validNumbers = function () {
+					var errMessage,	// text to display if an invalid entry is detected
+					    inputs;		// NodeList of textboxes whose contents are being tested
+
+					inputs = document.querySelectorAll('input[type=text]');
+					
+					errMessage = document.getElementById('errorMessage');
+					errMessage.style.visibility = 'hidden';
+
+					for (var i = 0; i < inputs.length; i++) {
+						if (isNaN(inputs[i].value) || inputs[i].value === '') {
+							errMessage.style.visibility = 'visible';
+							return false;
+						}
+					}
+
+					return true;
+				};
+			};
+		</script>
+	</body>
+</html>
