@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Get Max</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width" />
+		<style>
+			.addMore { color: #2980b9;} 
+			.maxValue { background-color:#fff273; color:#ff6666; }
+			body, input {font-family: Tahoma, sans-serif; font-size: 16px;}	
+			input[type=text]{border-radius:5px;margin:10px;width: 50px;}
+			input[type=button]{ 
+				background-color:#3498db;
+				border-radius:5px;
+				border-style:none;
+				color:#ffffff;
+				float:right;
+				margin-left:10px;
+				padding:10px;}			
+			p {width: 275px;}
+		</style>
+	</head>
+	<body>
+		<header>
+		  <hgroup>
+		    <h1>Get Max</h1>
+		    <h2>Enter some numbers, then click Get Max.</h2>
+		  </hgroup>
+		</header>
+		<div id="activeArea" style="width:550px;">
+			<div id="numbers" >
+				<input type="text" autofocus />
+				<input type="text" />
+				<input type="text" />
+				<input type="text" />
+				<input type="text" />
+				<input type="text" />
+				<input type="text" />
+			</div>	
+			<div>	
+				<p class="addMore" style="float:left;" onclick="addBox();">Add more numbers ...</p>
+				<p style="float:right;position:relative;top:-10px;" >
+					<input type="button" id="getMaxFasterButton" onclick="getMax('fast');" value="Get Max Faster">
+					<input type="button" id="getMaxButton" onclick="getMax('simple');" value="Get Max">
+				</p>
+			</div>
+		</div>
+		<script>			
+			var getMax = function (actionType) {
+				var i,				// counter	
+   				    j,				// counter	
+				    isMax,			// boolean to track max value
+				    maxBoxIndex,	// the index of the textbox containing the maximum number
+				    maxValue,		// the maximum number found in the array				
+					numbers;		// array of numbers entered in the textboxes				    				   
+
+				/* Get user input */
+				numbers = getInput();
+
+				/* Calculate the maximum value in the array + the index of its textbox */
+				maxValue = 0;
+				maxBoxIndex = 0;
+
+				if (actionType === 'simple'){
+					for (i = 0; i < numbers.length; i++) {
+						if (Number(numbers[i]) > maxValue) {
+							maxValue = numbers[i];
+							maxBoxIndex = i;
+						}
+					}
+				} else if (actionType === 'fast') {					
+					maxValue = 0;
+					maxBoxIndex = 0;
+					for (i = numbers.length - 1; i > 0; i--){
+						isMax = true;
+						for (j = 0; j < numbers.length; j++) {
+							if (Number(numbers[j]) > Number(numbers[i])) {
+								isMax = false;
+								break;
+							}
+						}
+						if (isMax) break;
+					}
+					maxValue = numbers[i];
+					maxBoxIndex = i;					
+				}
+
+				/* Show the result and highlight the box with the maximum value */
+				showResult(maxBoxIndex, maxValue);
+			}
+
+			var addBox = function () {
+				var newBox;		// a new textbox element for additional data entry
+
+				newBox = document.createElement('input');
+				newBox.type = 'text';
+				document.getElementById('numbers').appendChild(newBox);
+			}
+
+			var getInput = function () {
+				var boxes,			// NodeList of textboxes
+					i,				// counter
+					numbers;		// array of numbers entered in the textboxes
+
+				/* Get user input */
+				boxes = document.querySelectorAll('input[type=text]');
+
+				/* Put the numbers into an array */
+				numbers = [];
+				for (i = 0; i < boxes.length; i++) {	
+					numbers[i] = boxes[i].value;
+					boxes[i].style.backgroundColor = "#ffffff";
+					boxes[i].style.color = "#000000";
+				}
+				return numbers;
+			}
+
+			var showResult = function (maxBoxIndex, maxValue) {
+				var maxBox,			// the textbox element containing the maximum number
+					result;			// a new paragraph to display the message describing the result
+
+				/* Show the result and highlight the box with the maximum value */
+				result = document.createElement('p');				
+				result.appendChild(document.createTextNode('The maximum value is ' + maxValue));
+				document.getElementById('activeArea').appendChild(result);
+
+				maxBox = document.querySelectorAll('input[type=text]')[maxBoxIndex];				
+				maxBox.style.backgroundColor = '';
+				maxBox.style.color = '';
+				maxBox.className = "maxValue";
+			}
+		</script>
+	</body>
+</html>
