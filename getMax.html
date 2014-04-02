@@ -45,7 +45,24 @@
 				</p>
 			</div>
 		</div>
-		<script>			
+		<script>	
+			// wire up input blur event to ignore non-numeric entries
+			var textboxes =  document.querySelectorAll('input[type=text]');
+			for	(var i = 0; i < textboxes.length; i++) {
+				textboxes[i].onblur = function() { validNumber(event) };
+			}
+
+			function validNumber(evt) {
+			  var theEvent = evt || window.event;
+			  var key = theEvent.keyCode || theEvent.which;
+			  key = evt.target.value; 
+			  var regex = /[0-9]|\./;
+			 if( !regex.test(key) ) {
+				evt.target.value = '';
+				evt.target.focus();
+			  }
+			};
+
 			var getMax = function (actionType) {
 				var i,				// counter	
    				    j,				// counter	
@@ -78,7 +95,8 @@
 								isMax = false;
 								break;
 							}
-						}
+						
+					}
 						if (isMax) break;
 					}
 					maxValue = numbers[i];
